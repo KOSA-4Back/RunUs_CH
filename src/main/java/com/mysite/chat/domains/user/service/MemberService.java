@@ -25,15 +25,15 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public List<GetMemberChatInfoResponse> findAll(){
-        return memberRepository.findAll()
+        return memberRepository.findAllActiveMembers()
                 .stream()
-                .map(GetMemberChatInfoResponse::fromUser)
+                .map(GetMemberChatInfoResponse::from)
                 .toList();
     }
 
     public GetMemberChatInfoResponse findById(Long id){
-        Member member = memberRepository.findById(id).orElseThrow();
-        return GetMemberChatInfoResponse.fromUser(member);
+        Member member = memberRepository.findActiveMemberById(id).orElseThrow();
+        return GetMemberChatInfoResponse.from(member);
     }
 
     public boolean idExist(Long id){

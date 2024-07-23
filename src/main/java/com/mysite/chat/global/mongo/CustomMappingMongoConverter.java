@@ -3,9 +3,7 @@ package com.mysite.chat.global.mongo;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
-import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
-import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
-import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
+import org.springframework.data.mongodb.core.convert.*;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +26,11 @@ public class CustomMappingMongoConverter extends MappingMongoConverter {
     public CustomMappingMongoConverter(MongoDatabaseFactory mongoDbFactory, MongoMappingContext mappingContext) {
         super(new DefaultDbRefResolver(mongoDbFactory), mappingContext);
         setCustomConversions(new MongoCustomConversions(Collections.emptyList()));
+        setTypeMapper(defaultMongoTypeMapper());
+    }
+
+    private MongoTypeMapper defaultMongoTypeMapper() {
+        return new DefaultMongoTypeMapper(null);  // This disables the _class field
     }
 
     @Override
