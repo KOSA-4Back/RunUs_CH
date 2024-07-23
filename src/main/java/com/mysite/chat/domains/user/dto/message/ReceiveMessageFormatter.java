@@ -1,9 +1,6 @@
-package com.mysite.chat.domains.user.dto.response;
+package com.mysite.chat.domains.user.dto.message;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.mysite.chat.domains.user.domain.Member;
 
 import java.time.LocalDate;
@@ -25,6 +22,7 @@ public record ReceiveMessageFormatter(
         String email,
         String nickName,
         LocalDate birth,
+        @JsonProperty("profileUrl") String profileUrl,
         int height,
         int weight,
         @JsonProperty("createdAt") LocalDateTime createdAt,
@@ -36,10 +34,12 @@ public record ReceiveMessageFormatter(
                 .nickName(nickName)
                 .email(email)
                 .birth(birth)
+                .profileUrl(profileUrl)
                 .height(height)
                 .weight(weight)
                 .createdAt (createdAt)
                 .updatedAt(updatedAt)
+                .deletedAt(deletedAt)
                 .build();
     }
 }

@@ -32,6 +32,10 @@ public class ChatServerConfig {
     public Queue userUpdateQueue(){
         return new Queue("member.update.queue", true);
     }
+    @Bean
+    public Queue userUpdateProfileQueue(){
+        return new Queue("member.update.profile.queue", true);
+    }
 
     @Bean
     public Queue userDeleteAllQueue(){
@@ -51,6 +55,10 @@ public class ChatServerConfig {
     @Bean
     public Binding bindingUpdateQueue(DirectExchange exchange, Queue userUpdateQueue){
         return BindingBuilder.bind(userUpdateQueue).to(exchange).with("member.update");
+    }
+    @Bean
+    public Binding bindingUpdateProfileQueue(DirectExchange exchange, Queue userUpdateProfileQueue){
+        return BindingBuilder.bind(userUpdateProfileQueue).to(exchange).with("member.update.profile");
     }
 
     @Bean

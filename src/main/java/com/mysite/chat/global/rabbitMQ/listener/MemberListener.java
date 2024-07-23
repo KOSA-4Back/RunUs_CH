@@ -1,15 +1,18 @@
 package com.mysite.chat.global.rabbitMQ.listener;
 
 import com.mysite.chat.domains.user.domain.Member;
+import com.mysite.chat.domains.user.dto.message.ReceiveDeleteMessageFormatter;
 import com.mysite.chat.domains.user.dto.request.UpdateMemberProfileRequest;
-import com.mysite.chat.domains.user.dto.response.ReceiveMemberUpdateFormatter;
-import com.mysite.chat.domains.user.dto.response.ReceiveMessageFormatter;
+import com.mysite.chat.domains.user.dto.message.ReceiveMemberUpdateFormatter;
+import com.mysite.chat.domains.user.dto.message.ReceiveMessageFormatter;
 import com.mysite.chat.domains.user.repository.MemberRepository;
 import com.mysite.chat.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 /**
  * packageName    : user.controller
@@ -37,16 +40,16 @@ public class MemberListener {
     @RabbitListener(queues = "member.update.queue")
     public void handleMemberUpdateMessage(ReceiveMemberUpdateFormatter message) {
         log.info("handleUserUpdateMessage: {}", message);
-        Member member = memberRepository.findById(message.id())
+        Member member = memberRepository.findById(message.userId())
                 .orElseThrow(()->new NotFoundException("해당 Member 의 Update 에 실패하였습니다. "))
                 .updateMemberInfo(message);
         memberRepository.save(member);
     }
 
-    @RabbitListener(queues = "member.update.queue")
+    @RabbitListener(queues = "member.update.profile.queue")
     public void handleMemberUpdateProfile(UpdateMemberProfileRequest message){
         log.info("handleUserUpdateProfile");
-        Member member = memberRepository.findById(message.id())
+        Member member = memberRepository.findById(message.userId())
                 .orElseThrow(()->new NotFoundException("해당 멤버의 프로필 업데이트에 실패하였습니다."))
                 .updateProfileUrl(message.profileUrl());
         memberRepository.save(member);
@@ -54,14 +57,18 @@ public class MemberListener {
 
 
     @RabbitListener(queues = "member.delete.queue")
-    public void handleUserDeleteMessage(long id) {
-        log.info("deleteUserById: {}", id);
-        memberRepository.deleteById(id);
+    public void handleUserDeleteMessage(ReceiveDeleteMessageFormatter message) {
+        log.info("deleteUserById: {}", message);
+        Member member = memberRepository.findById(message.userId())
+                .orElseThrow(()->new NotFoundException("회원 삭제에 실패 하였습니다."))
+                .deleteMember(message.deletedAt());
+        memberRepository.save(member);
     }
 
     @RabbitListener(queues = "member.delete.all.queue")
-    public void handleUserDeleteAllMessage(String message) {
-        log.info("deleteAllUserMessage: {}", message);
-        memberRepository.deleteAll();
+    public void handleUserDeleteAllMessage(LocalDateTime deletionTime) {
+        log.info("deleteAllUserMessage: {}", deletionTime);
+        memberRepository.findAll()
+                .forEach(member -> memberRepository.save(member.deleteMember(deletionTime)));
     }
 }

@@ -1,4 +1,4 @@
-package com.mysite.chat.domains.user.dto.response;
+package com.mysite.chat.domains.user.dto.message;
 
 import java.time.LocalDate;
 
@@ -14,7 +14,7 @@ import java.time.LocalDate;
  * 2024-07-23        Yeong-Huns       최초 생성
  */
 public record ReceiveMemberUpdateFormatter(
-        long id,
+        long userId,
         String nickName,
         LocalDate birth,
         int height,
