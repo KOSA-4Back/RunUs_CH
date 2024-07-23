@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: chat
+  data:
+    mongodb:
+      repositories:
+        type: imperative
+      uri: mongodb+srv://vosxja1:1q2w3e4r%21%21%40@cluster0.qkkjdrh.mongodb.net/message
+      field-naming-strategy: org.springframework.data.mapping.model.SnakeCaseFieldNamingStrategy
+      auto-index-creation: true
+  jackson:
+      default-property-inclusion: ALWAYS
+      serialization:
+        write-dates-as-timestamps: false
+
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+server:
+  port: 8081
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
