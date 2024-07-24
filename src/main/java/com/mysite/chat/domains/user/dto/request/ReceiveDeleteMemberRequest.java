@@ -1,4 +1,4 @@
-package com.mysite.chat.domains.user.dto.message;
+package com.mysite.chat.domains.user.dto.request;
 
 import java.time.LocalDateTime;
 
@@ -13,5 +13,5 @@ import java.time.LocalDateTime;
  * -----------------------------------------------------------
  * 2024-07-23        Yeong-Huns       최초 생성
  */
-public record ReceiveDeleteMessageFormatter(long userId, LocalDateTime deletedAt) {
+public record ReceiveDeleteMemberRequest(long userId, LocalDateTime deletedAt) {
 }

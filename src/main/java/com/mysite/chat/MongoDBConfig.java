@@ -28,6 +28,7 @@ public class MongoDBConfig { // 위치가 여기여야 _class 명이 저장안�
         return new CustomMappingMongoConverter(mongoDatabaseFactory, mongoMappingContext);
     }
 
+
     @Bean
     public MongoTemplate mongoTemplate(MongoDatabaseFactory mongoDatabaseFactory, CustomMappingMongoConverter customMappingMongoConverter) {
         return new MongoTemplate(mongoDatabaseFactory, customMappingMongoConverter);

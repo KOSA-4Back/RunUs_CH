@@ -16,7 +16,7 @@ import lombok.Builder;
  */
 @Builder
 public record GetMemberChatInfoResponse(long id, String username, String email) {
-    public static GetMemberChatInfoResponse fromUser(Member member) {
+    public static GetMemberChatInfoResponse from(Member member) {
         return GetMemberChatInfoResponse.builder()
                 .id(member.getUserId())
                 .username(member.getNickName())
