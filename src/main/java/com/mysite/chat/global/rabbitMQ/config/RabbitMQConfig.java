@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -30,8 +33,11 @@ import org.springframework.retry.support.RetryTemplate;
  * -----------------------------------------------------------
  * 2024-07-20        Yeong-Huns       최초 생성
  */
+@RequiredArgsConstructor
 @Configuration
 public class RabbitMQConfig {
+
+    private final ObjectMapper objectMapper;
 
     @Bean
     public DirectExchange directExchange() {
@@ -39,11 +45,17 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public TopicExchange topicExchange() {
+        return new TopicExchange("topicExchange");
+    }
+
+    @Bean
+    public FanoutExchange fanoutExchange() {
+        return new FanoutExchange("fanoutExchange");
+    }
+
+    @Bean
     public MessageConverter jsonMessageConverter() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.ALWAYS); //항상 모든 필드를 포함하도록 설정
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); //날짜를 타임스탬프로 쓰지 않도록 설정
-        objectMapper.registerModule(new JavaTimeModule()); //JavaTimeModule을 등록하여 LocalDateTime 등의 타입을 지원하도록 설정
         return new Jackson2JsonMessageConverter(objectMapper);
     }
 
