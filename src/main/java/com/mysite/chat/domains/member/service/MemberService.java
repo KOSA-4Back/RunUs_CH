@@ -1,16 +1,18 @@
 package com.mysite.chat.domains.member.service;
-
-import com.mysite.chat.domains.member.dto.request.UpdateMemberProfileRequest;
-import com.mysite.chat.domains.member.dto.response.ReceiveMemberUpdateFormatter;
-import com.mysite.chat.domains.member.dto.response.ReceiveMessageFormatter;
+import com.mysite.chat.domains.user.domain.Member;
+import com.mysite.chat.domains.user.dto.request.ReceiveDeleteMemberRequest;
+import com.mysite.chat.domains.user.dto.request.UpdateMemberProfileRequest;
+import com.mysite.chat.domains.user.dto.request.ReceiveMemberUpdateRequest;
+import com.mysite.chat.domains.user.dto.request.ReceiveCreateMemberRequest;
+import com.mysite.chat.domains.user.repository.MemberRepository;
 import com.mysite.chat.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.mysite.chat.domains.member.domain.Member;
 import com.mysite.chat.domains.member.dto.response.GetMemberChatInfoResponse;
 import com.mysite.chat.domains.member.repository.MemberRepository;
-
 import java.util.List;
+import java.time.LocalDateTime;
 
 /**
  * packageName    : user.mysite.chat
@@ -28,42 +30,54 @@ import java.util.List;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    public List<GetMemberChatInfoResponse> findAll(){
-        return memberRepository.findAll()
-                .stream()
-                .map(GetMemberChatInfoResponse::fromUser)
-                .toList();
+    @RabbitListener(queues = "member.create.queue")
+    public void handleUserCreateMessage(ReceiveCreateMemberRequest message) {
+      log.info("handleUserCreateMessage: {}", message);
+      memberRepository.save(message.toEntity());
     }
 
-    public GetMemberChatInfoResponse findById(Long id){
-        Member member = memberRepository.findById(id).orElseThrow();
-        return GetMemberChatInfoResponse.fromUser(member);
-    }
-
-    public void handleUserCreateMessage(ReceiveMessageFormatter message) {
-        memberRepository.save(message.toEntity());
-    }
-
-    public void handleMemberUpdateMessage(ReceiveMemberUpdateFormatter message) {
-        Member member = memberRepository.findById(message.id())
+    @RabbitListener(queues = "chat.member.update.queue")
+    public void handleMemberUpdateMessage(ReceiveMemberUpdateRequest message) {
+        log.info("handleUserUpdateMessage: {}", message);
+        Member member = memberRepository.findById(message.userId())
                 .orElseThrow(()->new NotFoundException("해당 Member 의 Update 에 실패하였습니다. "))
                 .updateMemberInfo(message);
         memberRepository.save(member);
     }
 
+    @RabbitListener(queues = "chat.member.update.role.queue")
+    public void handleMemberUpdateMessage(long id) {
+        log.info("handleUserUpdateRoleMessage: {}", id);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(()->new NotFoundException("해당 Member 의 ADMIN 변경에 실패하였습니다."))
+                .updateRoleToAdmin();
+        memberRepository.save(member);
+    }
+
+    @RabbitListener(queues = "chat.member.update.profile.queue")
     public void handleMemberUpdateProfile(UpdateMemberProfileRequest message){
-        Member member = memberRepository.findById(message.id())
+        log.info("handleUserUpdateProfile");
+        Member member = memberRepository.findById(message.userId())
                 .orElseThrow(()->new NotFoundException("해당 멤버의 프로필 업데이트에 실패하였습니다."))
                 .updateProfileUrl(message.profileUrl());
         memberRepository.save(member);
     }
 
-    public void handleUserDeleteMessage(long id) {
-        memberRepository.deleteById(id);
+
+    @RabbitListener(queues = "chat.member.delete.queue")
+    public void handleUserDeleteMessage(ReceiveDeleteMemberRequest message) {
+        log.info("deleteUserById: {}", message);
+        Member member = memberRepository.findById(message.userId())
+                .orElseThrow(()->new NotFoundException("회원 삭제에 실패 하였습니다."))
+                .deleteMember(message.deletedAt());
+        memberRepository.save(member);
     }
 
-    public void handleUserDeleteAllMessage(String message) {
-        memberRepository.deleteAll();
+    @RabbitListener(queues = "chat.member.delete.all.queue")
+    public void handleUserDeleteAllMessage(LocalDateTime deletionTime) {
+        log.info("deleteAllUserMessage: {}", deletionTime);
+        memberRepository.findAll()
+                .forEach(member -> memberRepository.save(member.deleteMember(deletionTime)));
     }
 
 

@@ -1,7 +1,14 @@
+<<<<<<<< HEAD:src/main/java/com/mysite/chat/domains/member/dto/response/ReceiveMessageFormatter.java
 package com.mysite.chat.domains.member.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mysite.chat.domains.member.domain.Member;
+========
+package com.mysite.chat.domains.user.dto.request;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mysite.chat.domains.user.domain.Member;
+>>>>>>>> 9d9f5b95feb9e939a5f019c278b1f9393062259b:src/main/java/com/mysite/chat/domains/member/dto/request/ReceiveCreateMemberRequest.java
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,11 +24,13 @@ import java.time.LocalDateTime;
  * -----------------------------------------------------------
  * 2024-07-21        Yeong-Huns       최초 생성
  */
-public record ReceiveMessageFormatter(
+public record ReceiveCreateMemberRequest(
         long userId,
         String email,
         String nickName,
         LocalDate birth,
+        String role,
+        @JsonProperty("profileUrl") String profileUrl,
         int height,
         int weight,
         @JsonProperty("createdAt") LocalDateTime createdAt,
@@ -33,10 +42,13 @@ public record ReceiveMessageFormatter(
                 .nickName(nickName)
                 .email(email)
                 .birth(birth)
+                .role(role)
+                .profileUrl(profileUrl)
                 .height(height)
                 .weight(weight)
                 .createdAt (createdAt)
                 .updatedAt(updatedAt)
+                .deletedAt(deletedAt)
                 .build();
     }
 }
