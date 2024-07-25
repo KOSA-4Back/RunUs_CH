@@ -1,6 +1,6 @@
 package com.mysite.chat.global.error.exception;
 
-import com.mysite.chat.global.error.errorCode.ErrorCode;
+import com.mysite.chat.global.error.errorCode.ResponseCode;
 
 /**
  * packageName    : org.omsf.error.Exception
@@ -14,13 +14,13 @@ import com.mysite.chat.global.error.errorCode.ErrorCode;
  * 2024-06-18        Yeong-Huns       최초 생성
  */
 public class NotFoundException extends CustomBaseException{
-    public NotFoundException(ErrorCode errorCode){
-        super(errorCode.getMessage(), errorCode);
+    public NotFoundException(ResponseCode responseCode){
+        super(responseCode.getMessage(), responseCode);
     }
     public NotFoundException(){
-        super(ErrorCode.NOT_FOUND);
+        super(ResponseCode.NOT_FOUND);
     }
     public NotFoundException(String message){
-        super(message, ErrorCode.NOT_FOUND);
+        super(message, ResponseCode.NOT_FOUND);
     }
 }

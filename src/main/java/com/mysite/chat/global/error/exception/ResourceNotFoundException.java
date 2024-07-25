@@ -1,6 +1,6 @@
 package com.mysite.chat.global.error.exception;
 
-import com.mysite.chat.global.error.errorCode.ErrorCode;
+import com.mysite.chat.global.error.errorCode.ResponseCode;
 
 /**
  * packageName    : org.omsf.error.Exception
@@ -15,12 +15,12 @@ import com.mysite.chat.global.error.errorCode.ErrorCode;
  */
 public class ResourceNotFoundException extends NotFoundException {
     public ResourceNotFoundException() {
-        super(ErrorCode.NOT_FOUND);
+        super(ResponseCode.NOT_FOUND);
     }
     public ResourceNotFoundException(String message) {
         super(message);
     }
-    public ResourceNotFoundException(ErrorCode errorCode) {
-        super(errorCode);
+    public ResourceNotFoundException(ResponseCode responseCode) {
+        super(responseCode);
     }
 }

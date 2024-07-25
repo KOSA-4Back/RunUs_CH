@@ -1,6 +1,6 @@
 package com.mysite.chat.global.error.response;
 
-import com.mysite.chat.global.error.errorCode.ErrorCode;
+import com.mysite.chat.global.error.errorCode.ResponseCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,21 +25,21 @@ public class ErrorResponse {
     private String Message;
     private String code;
 
-    public ErrorResponse(final ErrorCode code) {
+    public ErrorResponse(final ResponseCode code) {
         this.Message = code.getMessage();
         this.code = code.getCode();
     }
 
-    public ErrorResponse(final ErrorCode code, final String message) {
+    public ErrorResponse(final ResponseCode code, final String message) {
         this.Message = message;
         this.code = code.getCode();
     }
 
-    public static ErrorResponse of(final ErrorCode code) {
+    public static ErrorResponse of(final ResponseCode code) {
         return new ErrorResponse(code);
     }
 
-    public static ErrorResponse of(final ErrorCode code, final String message) {
+    public static ErrorResponse of(final ResponseCode code, final String message) {
         return new ErrorResponse(code, message);
     }
 }

@@ -1,6 +1,6 @@
 package com.mysite.chat.global.error.exception;
 
-import com.mysite.chat.global.error.errorCode.ErrorCode;
+import com.mysite.chat.global.error.errorCode.ResponseCode;
 import lombok.Getter;
 
 /**
@@ -16,15 +16,15 @@ import lombok.Getter;
  */
 @Getter
 public class CustomBaseException extends RuntimeException{
-    private final ErrorCode errorCode;
+    private final ResponseCode responseCode;
 
-    public CustomBaseException(String message, ErrorCode errorCode) {
+    public CustomBaseException(String message, ResponseCode responseCode) {
         super(message);
-        this.errorCode = errorCode;
+        this.responseCode = responseCode;
     }
 
-    public CustomBaseException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
+    public CustomBaseException(ResponseCode responseCode) {
+        super(responseCode.getMessage());
+        this.responseCode = responseCode;
     }
 }

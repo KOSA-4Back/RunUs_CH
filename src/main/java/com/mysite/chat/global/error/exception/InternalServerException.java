@@ -1,6 +1,6 @@
 package com.mysite.chat.global.error.exception;
 
-import com.mysite.chat.global.error.errorCode.ErrorCode;
+import com.mysite.chat.global.error.errorCode.ResponseCode;
 
 /**
  * packageName    : org.omsf.error.Exception
@@ -14,13 +14,13 @@ import com.mysite.chat.global.error.errorCode.ErrorCode;
  * 2024-06-18        Yeong-Huns       최초 생성
  */
 public class InternalServerException extends CustomBaseException {
-    public InternalServerException(ErrorCode errorCode){
-        super(errorCode.getMessage(), errorCode);
+    public InternalServerException(ResponseCode responseCode){
+        super(responseCode.getMessage(), responseCode);
     }
     public InternalServerException(){
-        super(ErrorCode.INVALID_INPUT_VALUE);
+        super(ResponseCode.INVALID_INPUT_VALUE);
     }
     public InternalServerException(String message){
-        super(message, ErrorCode.INTERNAL_SERVER_ERROR);
+        super(message, ResponseCode.INTERNAL_SERVER_ERROR);
     }
 }
