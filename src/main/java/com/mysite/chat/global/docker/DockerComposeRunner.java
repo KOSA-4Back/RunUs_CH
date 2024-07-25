@@ -27,7 +27,8 @@ public class DockerComposeRunner implements CommandLineRunner {
         ProcessBuilder processBuilder;
 
         if (os.contains("win")) {
-            processBuilder = new ProcessBuilder("bash", "-c", "./start-docker-compose.sh");
+            // Windows에서 PowerShell을 사용하여 스크립트 실행
+            processBuilder = new ProcessBuilder("powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "start-docker-compose.ps1");
         } else {
             processBuilder = new ProcessBuilder("bash", "./start-docker-compose.sh");
         }
@@ -57,7 +58,8 @@ public class DockerComposeRunner implements CommandLineRunner {
         ProcessBuilder processBuilder;
 
         if (os.contains("win")) {
-            processBuilder = new ProcessBuilder("bash", "-c", "./stop-docker-compose.sh");
+            // Windows에서 PowerShell을 사용하여 스크립트 실행
+            processBuilder = new ProcessBuilder("powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "stop-docker-compose.ps1");
         } else {
             processBuilder = new ProcessBuilder("bash", "./stop-docker-compose.sh");
         }

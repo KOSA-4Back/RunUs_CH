@@ -1,0 +1,1 @@
+docker-compose -f C:\lect_message\chat\docker-compose.yml -p runus_ch down

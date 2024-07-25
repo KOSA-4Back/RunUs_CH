@@ -1,8 +1,10 @@
 package com.mysite.chat.domains.member.dto.request;
 
+import java.time.LocalDateTime;
+
 /**
- * packageName    : com.fourback.runus.domains.member.dto.requeset
- * fileName       : UpdateMemberProfileRequest
+ * packageName    : com.mysite.chat.domains.user.dto.message
+ * fileName       : ReceiveDeleteMessage
  * author         : Yeong-Huns
  * date           : 2024-07-23
  * description    :
@@ -11,8 +13,5 @@ package com.mysite.chat.domains.member.dto.request;
  * -----------------------------------------------------------
  * 2024-07-23        Yeong-Huns       최초 생성
  */
-public record UpdateMemberProfileRequest(
-        long userId,
-        String profileUrl
-) {
+public record ReceiveDeleteMemberRequest(long userId, LocalDateTime deletedAt) {
 }

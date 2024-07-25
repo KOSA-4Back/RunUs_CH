@@ -1,6 +1,8 @@
 package com.mysite.chat.domains.chatRoom.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mysite.chat.domains.message.domain.Message;
+import com.mysite.chat.global.mongo.ObjectIdSerializer;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +34,7 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom {
     @Id
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
     private String title;
     private List<Participant> participants;

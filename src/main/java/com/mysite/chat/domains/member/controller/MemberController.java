@@ -1,8 +1,12 @@
 package com.mysite.chat.domains.member.controller;
 
+import com.mysite.chat.domains.member.domain.Member;
+import com.mysite.chat.domains.member.dto.request.ReceiveCreateMemberRequest;
+import com.mysite.chat.domains.member.dto.request.ReceiveDeleteMemberRequest;
+import com.mysite.chat.domains.member.dto.request.ReceiveMemberUpdateRequest;
 import com.mysite.chat.domains.member.dto.request.UpdateMemberProfileRequest;
-import com.mysite.chat.domains.member.dto.response.ReceiveMemberUpdateFormatter;
-import com.mysite.chat.domains.member.dto.response.ReceiveMessageFormatter;
+import com.mysite.chat.domains.member.dto.response.GetMemberChatInfoResponse;
+import com.mysite.chat.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -11,9 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.mysite.chat.domains.member.dto.response.GetMemberChatInfoResponse;
 import com.mysite.chat.domains.member.service.MemberService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -47,34 +51,40 @@ public class MemberController {
 
 
     @RabbitListener(queues = "member.create.queue")
-    public void handleUserCreateMessage(ReceiveMessageFormatter message) {
+    public void handleUserCreateMessage(ReceiveCreateMemberRequest message) {
         log.info("handleUserCreateMessage: {}", message);
         memberService.handleUserCreateMessage(message);
     }
 
-    @RabbitListener(queues = "member.update.queue")
-    public void handleMemberUpdateMessage(ReceiveMemberUpdateFormatter message) {
+    @RabbitListener(queues = "chat.member.update.queue")
+    public void handleMemberUpdateMessage(ReceiveMemberUpdateRequest message) {
         log.info("handleUserUpdateMessage: {}", message);
         memberService.handleMemberUpdateMessage(message);
     }
 
-    @RabbitListener(queues = "member.update.queue")
+    @RabbitListener(queues = "chat.member.update.role.queue")
+    public void handleMemberUpdateMessage(long id) {
+        log.info("handleUserUpdateRoleMessage: {}", id);
+        memberService.handleMemberUpdateRole(id);
+    }
+
+    @RabbitListener(queues = "chat.member.update.profile.queue")
     public void handleMemberUpdateProfile(UpdateMemberProfileRequest message){
         log.info("handleUserUpdateProfile");
         memberService.handleMemberUpdateProfile(message);
     }
 
 
-    @RabbitListener(queues = "member.delete.queue")
-    public void handleUserDeleteMessage(long id) {
-        log.info("deleteUserById: {}", id);
-        memberService.handleUserDeleteMessage(id);
+    @RabbitListener(queues = "chat.member.delete.queue")
+    public void handleUserDeleteMessage(ReceiveDeleteMemberRequest message) {
+        log.info("deleteUserById: {}", message);
+        memberService.handleUserDeleteMessage(message);
     }
 
-    @RabbitListener(queues = "member.delete.all.queue")
-    public void handleUserDeleteAllMessage(String message) {
-        log.info("deleteAllUserMessage: {}", message);
-        memberService.handleUserDeleteAllMessage(message);
+    @RabbitListener(queues = "chat.member.delete.all.queue")
+    public void handleUserDeleteAllMessage(LocalDateTime deletionTime) {
+        log.info("deleteAllUserMessage: {}", deletionTime);
+        memberService.handleUserDeleteAllMessage(deletionTime);
     }
 
 }

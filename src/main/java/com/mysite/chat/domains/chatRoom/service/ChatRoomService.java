@@ -36,10 +36,7 @@ public class ChatRoomService {
 
     // 생성
     public ChatRoom createChatsRoom(CreateChatRoomRequest request) {
-        return ChatRoom.builder()
-                .title(request.title())
-                .createdBy(request.createdBy())
-                .build();
+        return chatRoomRepository.save(request.toEntity());
     }
 
     // 조회

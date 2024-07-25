@@ -1,5 +1,6 @@
 package com.mysite.chat.domains.chatRoom.dto.request;
 
+import com.mysite.chat.domains.chatRoom.domain.ChatRoom;
 import com.mysite.chat.domains.chatRoom.domain.Participant;
 import lombok.Builder;
 
@@ -16,4 +17,10 @@ import lombok.Builder;
  */
 @Builder
 public record CreateChatRoomRequest(String title, long createdBy) {
+    public ChatRoom toEntity() {
+        return ChatRoom.builder()
+                .title(title)
+                .createdBy(createdBy)
+                .build();
+    }
 }
