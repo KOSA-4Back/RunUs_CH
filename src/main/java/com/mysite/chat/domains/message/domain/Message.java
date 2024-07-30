@@ -1,5 +1,7 @@
 package com.mysite.chat.domains.message.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.mysite.chat.global.mongo.ObjectIdSerializer;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,6 +29,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Message {
     @Id
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
     private ObjectId chatRoomId;
     private long senderId;

@@ -54,7 +54,8 @@ public class ChatRoom {
 
     // 채팅방 입장
     public ChatRoom addParticipant(long userId) {
-        participants.add(Participant.from(userId));
+        if(!participants.contains(Participant.from(userId))) // 없으면 추가해라
+            participants.add(Participant.from(userId));
         return this;
     }
 

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * packageName    : com.mysite.chat.domains.chatRoom.domain
@@ -33,5 +34,20 @@ public class Participant {
     // 정적 팩토리 메서드
     public static Participant from(long userId) {
         return new Participant(userId);
+    }
+
+    // Participant 배열에서 제거(remove)를 위한 equals 오버라이드
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Participant that = (Participant) o;
+        return userId == that.userId;
+    }
+
+    // Participant 배열에서 제거를 위한 hashcode 오버라이드
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
     }
 }

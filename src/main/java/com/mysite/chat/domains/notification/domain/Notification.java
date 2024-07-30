@@ -1,6 +1,9 @@
 package com.mysite.chat.domains.notification.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.mysite.chat.global.mongo.ObjectIdSerializer;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
@@ -26,6 +29,7 @@ import java.time.LocalDateTime;
 @Document(collection = "notifications")
 public class Notification {
     @Id
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
     private int senderId;
     private int receiverId;
@@ -33,4 +37,17 @@ public class Notification {
     private boolean isRead;
     @CreatedDate
     private LocalDateTime createdAt;
+
+    @Builder
+    public Notification(int senderId, int receiverId, String content) {
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.content = content;
+        this.isRead = false;
+    }
+
+    public Notification updateIsReadTrue(){
+        this.isRead = true;
+        return this;
+    }
 }
