@@ -9,6 +9,7 @@ import com.mysite.chat.domains.message.repository.MessageRepository;
 import com.mysite.chat.domains.notification.repository.NotificationRepository;
 import com.mysite.chat.global.error.errorCode.ResponseCode;
 import com.mysite.chat.global.error.exception.NotFoundException;
+import com.mysite.chat.global.mongo.ObjectIdConverter;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -40,8 +41,8 @@ public class ChatRoomService {
     }
 
     // 조회
-    public ChatRoom findChatRoomById(ObjectId id) {
-        return chatRoomRepository.findById(id)
+    public ChatRoom findChatRoomById(String id) {
+        return chatRoomRepository.findById(ObjectIdConverter.fromString(id))
                 .orElseThrow(()->new NotFoundException(ResponseCode.NOT_FOUND_CHATROOM));
     }
 
@@ -51,17 +52,17 @@ public class ChatRoomService {
     }
 
     // 삭제 (Optional)
-    public void deleteChatRoomById(ObjectId id){
-        chatRoomRepository.deleteById(id);
+    public void deleteChatRoomById(String id){
+        chatRoomRepository.deleteById(ObjectIdConverter.fromString(id));
     }
 
     // participant 추가 (채팅방 입장)
-    public void addParticipantToChatRoom(ObjectId chatRoomId, long userId){
+    public void addParticipantToChatRoom(String chatRoomId, long userId){
         chatRoomRepository.save(findChatRoomById(chatRoomId).addParticipant(userId));
     }
 
     // participant 제거 (채팅방 탈퇴)
-    public void removeParticipantFromChatRoom(ObjectId chatRoomId, long userId){
+    public void removeParticipantFromChatRoom(String chatRoomId, long userId){
         chatRoomRepository.save(findChatRoomById(chatRoomId).removeParticipant(userId));
     }
 
@@ -76,8 +77,8 @@ public class ChatRoomService {
     }
 
     // 마지막 메세지 업데이트
-    public void updateLastMessage(ObjectId chatRoomId, Message lastMessage){
-        chatRoomRepository.findById(chatRoomId).orElseThrow(()->new NotFoundException(ResponseCode.NOT_FOUND_CHATROOM))
+    public void updateLastMessage(String chatRoomId, Message lastMessage){
+        chatRoomRepository.findById(ObjectIdConverter.fromString(chatRoomId)).orElseThrow(()->new NotFoundException(ResponseCode.NOT_FOUND_CHATROOM))
                 .updateLastMessage(lastMessage);
     }
 

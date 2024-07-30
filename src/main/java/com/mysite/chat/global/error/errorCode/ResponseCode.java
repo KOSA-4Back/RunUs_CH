@@ -55,6 +55,7 @@ public enum ResponseCode {
     // -------------------------------- 여기부턴 커스텀 에러 -----------------------------------------
     // 커스텀 예외 생성시 code 90번부터 지정 -> ex) REQUIRE_MORE_COFFEE(HttpStatus.SERVICE_UNAVAILABLE, "E90", "더 많은 커피가 필요합니다.")
     REQUIRE_MORE_COFFEE(HttpStatus.SERVICE_UNAVAILABLE, "E90", "커피가 부족 합니다."),
+    INVALID_OBJECT_ID(HttpStatus.PRECONDITION_FAILED, "DD95", "유효하지 않은 ObjectId 값입니다."),
 
     ;
     private final HttpStatus status;

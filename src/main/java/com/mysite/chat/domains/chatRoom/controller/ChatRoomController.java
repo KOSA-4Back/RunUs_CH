@@ -33,7 +33,7 @@ public class ChatRoomController {
     }
 
     @GetMapping("/{id}")
-    public ChatRoom getChatRoomById(@PathVariable ObjectId id) {
+    public ChatRoom getChatRoomById(@PathVariable String id) {
         return chatRoomService.findChatRoomById(id);
     }
 
@@ -43,7 +43,7 @@ public class ChatRoomController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteChatRoomById(@PathVariable ObjectId id) {
+    public void deleteChatRoomById(@PathVariable String id) {
         chatRoomService.deleteChatRoomById(id);
     }
 

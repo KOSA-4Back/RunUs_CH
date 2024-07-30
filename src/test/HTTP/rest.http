@@ -1,0 +1,42 @@
+### 채팅방 생성
+@chatRoomTitle = "채팅방 타이틀 입력5"
+@createdBy = 44
+POST http://localhost:8081/api/chatRoom
+Content-Type: application/json
+
+{
+  "title": {{chatRoomTitle}},
+  "createdBy": {{createdBy}}
+}
+> {% client.global.set("chatRoomId", JSON.parse(response.body).id); %}
+
+### 특정 채팅방 조회
+GET http://localhost:8081/api/chatRoom/{{chatRoomId}}
+Content-Type: application/json
+
+
+### 유저 ID로 채팅방 목록 조회
+GET http://localhost:8080/api/chatRoom/mongoUser/{{userId}}
+Content-Type: application/json
+
+### 특정 채팅방 삭제
+DELETE http://localhost:8080/api/chatRoom/{{chatRoomId}}
+Content-Type: application/json
+
+### 채팅방에 참여자 추가
+POST http://localhost:8080/api/chatRoom/participants
+Content-Type: application/json
+
+{
+  "chatRoomId": "{{chatRoomId}}",
+  "userId": 12345
+}
+
+### 채팅방에서 참여자 제거
+DELETE http://localhost:8080/api/chatRoom/participants
+Content-Type: application/json
+
+{
+  "chatRoomId": "{{chatRoomId}}",
+  "userId": 12345
+}

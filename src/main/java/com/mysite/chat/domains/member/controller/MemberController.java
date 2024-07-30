@@ -50,41 +50,12 @@ public class MemberController {
     }
 
 
-    @RabbitListener(queues = "member.create.queue")
+    /*@RabbitListener(queues = "member.create.queue")
     public void handleUserCreateMessage(ReceiveCreateMemberRequest message) {
         log.info("handleUserCreateMessage: {}", message);
         memberService.handleUserCreateMessage(message);
-    }
-
-    @RabbitListener(queues = "chat.member.update.queue")
-    public void handleMemberUpdateMessage(ReceiveMemberUpdateRequest message) {
-        log.info("handleUserUpdateMessage: {}", message);
-        memberService.handleMemberUpdateMessage(message);
-    }
-
-    @RabbitListener(queues = "chat.member.update.role.queue")
-    public void handleMemberUpdateMessage(long id) {
-        log.info("handleUserUpdateRoleMessage: {}", id);
-        memberService.handleMemberUpdateRole(id);
-    }
-
-    @RabbitListener(queues = "chat.member.update.profile.queue")
-    public void handleMemberUpdateProfile(UpdateMemberProfileRequest message){
-        log.info("handleUserUpdateProfile");
-        memberService.handleMemberUpdateProfile(message);
-    }
+    }*/
 
 
-    @RabbitListener(queues = "chat.member.delete.queue")
-    public void handleUserDeleteMessage(ReceiveDeleteMemberRequest message) {
-        log.info("deleteUserById: {}", message);
-        memberService.handleUserDeleteMessage(message);
-    }
-
-    @RabbitListener(queues = "chat.member.delete.all.queue")
-    public void handleUserDeleteAllMessage(LocalDateTime deletionTime) {
-        log.info("deleteAllUserMessage: {}", deletionTime);
-        memberService.handleUserDeleteAllMessage(deletionTime);
-    }
 
 }
