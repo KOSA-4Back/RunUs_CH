@@ -15,10 +15,12 @@ import lombok.Builder;
  * 2024-07-26        Yeong-Huns       최초 생성
  */
 @Builder
-public record CreateNotificationRequest(int senderId, int receiverId, String content) {
+public record CreateNotificationRequest(int senderId, int receiverId, String content, String senderProfile, String senderName) {
     public Notification toEntity(){
         return Notification.builder()
                 .senderId(senderId)
+                .senderProfile(senderProfile)
+                .senderName(senderName)
                 .receiverId(receiverId)
                 .content(content)
                 .build();

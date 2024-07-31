@@ -29,20 +29,23 @@ import java.time.LocalDateTime;
 @Document(collection = "notifications")
 public class Notification {
     @Id
-    @JsonSerialize(using = ObjectIdSerializer.class)
-    private ObjectId id;
-    private int senderId;
-    private int receiverId;
+    private String id;
+    private long senderId;
+    private String senderName;
+    private String senderProfile;
+    private long receiverId;
     private String content;
     private boolean isRead;
     @CreatedDate
     private LocalDateTime createdAt;
 
     @Builder
-    public Notification(int senderId, int receiverId, String content) {
+    public Notification(long senderId, long receiverId, String content, String senderName, String senderProfile) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.content = content;
+        this.senderName = senderName;
+        this.senderProfile = senderProfile;
         this.isRead = false;
     }
 

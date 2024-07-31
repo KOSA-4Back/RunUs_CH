@@ -12,6 +12,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * packageName    : com.mysite.chat.domains.message.domain
@@ -29,9 +30,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Message {
     @Id
-    @JsonSerialize(using = ObjectIdSerializer.class)
-    private ObjectId id;
-    private ObjectId chatRoomId;
+    private String id;
+    private String type;
+    private String chatRoomId;
     private long senderId;
     private String senderNickName;
     private String senderProfileUrl;
@@ -40,8 +41,9 @@ public class Message {
     @CreatedDate
     private LocalDateTime createdAt;
     @Builder
-    public Message(ObjectId chatRoomId, long senderId, String senderNickName, String senderProfileUrl, String content, int unReadCount) {
+    public Message(String chatRoomId, String type, long senderId, String senderNickName, String senderProfileUrl, String content, int unReadCount) {
         this.chatRoomId = chatRoomId;
+        this.type = type;
         this.senderId = senderId;
         this.senderNickName = senderNickName;
         this.senderProfileUrl = senderProfileUrl;
@@ -51,6 +53,11 @@ public class Message {
 
     public Message updateUnReadCount(){
         this.unReadCount--;
+        return this;
+    }
+
+    public Message changeType(){
+        this.type = Objects.equals(type, "message") ? "notification" : "message";
         return this;
     }
 }
