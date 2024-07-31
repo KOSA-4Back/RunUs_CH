@@ -40,12 +40,15 @@ public class RabbitConfig {
     public static final String USER_EVENT_QUEUE = "user.event.queue";
     @Bean
     public MessageConverter jsonMessageConverter() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(new JavaTimeModule());
-        return new Jackson2JsonMessageConverter(objectMapper);
+        return new Jackson2JsonMessageConverter();
     }
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        template.setMessageConverter(jsonMessageConverter());
+        return template;
+    }
+
     @Bean
     public SimpleMessageListenerContainer messageListenerContainer(CachingConnectionFactory connectionFactory,
                                                                    MessageListenerAdapter listenerAdapter) {
@@ -55,6 +58,7 @@ public class RabbitConfig {
         container.setMessageListener(listenerAdapter);
         return container;
     }
+    // 메시지 리스너 어댑터를 설정합니다. 이 어댑터는 수신된 메시지를 특정 메소드(handleUserEvent)로 라우팅합니다.
     @Bean
     public MessageListenerAdapter listenerAdapter(UserEventListener receiver) {
         MessageListenerAdapter adapter = new MessageListenerAdapter(receiver, "handleUserEvent");
@@ -62,38 +66,35 @@ public class RabbitConfig {
         return adapter;
     }
 
-    @Bean
-    public RabbitTemplate rabbitTemplate(CachingConnectionFactory connectionFactory) {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(jsonMessageConverter());
-        return rabbitTemplate;
-    }
-
+    // RabbitMQ 관리를 위한 RabbitAdmin 빈을 설정합니다.
     @Bean
     public RabbitAdmin rabbitAdmin(CachingConnectionFactory connectionFactory) {
         return new RabbitAdmin(connectionFactory);
     }
 
+    // DirectExchange 설정. 주로 유저 생성, 삭제, 수정 이벤트를 처리합니다.
     @Bean
-    public DirectExchange userExchange(){ //유저 생성 , 삭제, 수정용
+    public DirectExchange userExchange() {
         return new DirectExchange(USER_EXCHANGE_NAME, true, false);
     }
 
+    // TopicExchange 설정. 메시지 및 알람 이벤트 처리를 위해 사용됩니다.
     @Bean
-    public TopicExchange MessageExchange(){ //메세지, 알람용
+    public TopicExchange messageExchange() {
         return new TopicExchange(MESSAGE_EXCHANGE_NAME, true, false);
     }
 
+    // 유저 이벤트를 위한 큐를 정의합니다.
     @Bean
-    public Queue userEventQueue(){
+    public Queue userEventQueue() {
         return new Queue(USER_EVENT_QUEUE, true);
     }
 
+    // 유저 이벤트 큐와 DirectExchange를 바인딩합니다.
     @Bean
     public Binding userEventBinding(DirectExchange userExchange, Queue userEventQueue) {
         return BindingBuilder.bind(userEventQueue).to(userExchange).with("user.event");
     }
-
 
 /*
     public Exchange createExchange(String exchangeName, ExchangeType exchangeType, RabbitAdmin rabbitAdmin) {
