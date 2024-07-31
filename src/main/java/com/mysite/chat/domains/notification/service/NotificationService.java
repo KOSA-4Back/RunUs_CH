@@ -33,7 +33,7 @@ public class NotificationService {
 
 
     // 알람 조회
-    public Notification getNotification(ObjectId notificationId) {
+    public Notification getNotification(String notificationId) {
         return notificationRepository.findById(notificationId).orElseThrow(()->new NotFoundException("해당 유저의 알람을 조회하는데 실패하였습니다."));
     }
 
@@ -43,7 +43,7 @@ public class NotificationService {
     }
 
     // 알람 읽음 (업데이트) 처리
-    public Notification updateNotification(ObjectId notificationId) {
+    public Notification updateNotification(String notificationId) {
         return notificationRepository.save(
                 notificationRepository.findById(notificationId)
                         .orElseThrow(() -> new NotFoundException("해당 유저의 알람은 존재하지않습니다."))

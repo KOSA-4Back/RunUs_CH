@@ -40,7 +40,9 @@ public class RabbitConfig {
     public static final String USER_EVENT_QUEUE = "user.event.queue";
     @Bean
     public MessageConverter jsonMessageConverter() {
-        return new Jackson2JsonMessageConverter();
+        // 타입 정보 없이 Jackson JSON 컨버터를 생성합니다.
+        Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
+        return converter;
     }
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
@@ -54,7 +56,6 @@ public class RabbitConfig {
                                                                    MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames("user.event.queue");
         container.setMessageListener(listenerAdapter);
         return container;
     }
@@ -65,6 +66,7 @@ public class RabbitConfig {
         adapter.setMessageConverter(jsonMessageConverter());
         return adapter;
     }
+
 
     // RabbitMQ 관리를 위한 RabbitAdmin 빈을 설정합니다.
     @Bean
@@ -86,15 +88,23 @@ public class RabbitConfig {
 
     // 유저 이벤트를 위한 큐를 정의합니다.
     @Bean
-    public Queue userEventQueue() {
-        return new Queue(USER_EVENT_QUEUE, true);
+    public Queue userCreateQueue() {
+        return new Queue("user.event.create", true);
     }
-
-    // 유저 이벤트 큐와 DirectExchange를 바인딩합니다.
     @Bean
-    public Binding userEventBinding(DirectExchange userExchange, Queue userEventQueue) {
-        return BindingBuilder.bind(userEventQueue).to(userExchange).with("user.event");
+    public Binding userCreateEventBinding(DirectExchange userExchange, Queue userCreateQueue) {
+        return BindingBuilder.bind(userCreateQueue).to(userExchange).with("user.event.create");
     }
+    @Bean
+    public Queue userUpdateQueue(){
+        return new Queue("user.event.update", true);
+    }
+    @Bean
+    public Binding userUpdateEventBinding(DirectExchange userExchange, Queue userUpdateQueue) {
+        return BindingBuilder.bind(userUpdateQueue).to(userExchange).with("user.event.update");
+    }
+    // 유저 이벤트 큐와 DirectExchange를 바인딩합니다.
+
 
 /*
     public Exchange createExchange(String exchangeName, ExchangeType exchangeType, RabbitAdmin rabbitAdmin) {

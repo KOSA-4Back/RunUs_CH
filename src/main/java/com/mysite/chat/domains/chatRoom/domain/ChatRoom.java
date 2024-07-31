@@ -34,8 +34,7 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom {
     @Id
-    @JsonSerialize(using = ObjectIdSerializer.class)
-    private ObjectId id;
+    private String id;
     private String title;
     private List<Participant> participants;
     private long createdBy;
@@ -71,6 +70,10 @@ public class ChatRoom {
                 .filter(participant->participant.getUserId() == userId)
                 .map(Participant::getJoinedAt)
                 .findFirst();
+    }
+    // 큐 네임 반환
+    public List<String> getQueueNames(){
+        return this.participants.stream().map(userId->"personal."+userId).toList();
     }
 
     // 마지막 메세지 업데이트

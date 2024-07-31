@@ -22,8 +22,12 @@ import org.springframework.stereotype.Component;
 public class UserEventListener {
     private final UserService userService;
 
-    @RabbitListener(queues = "user.event.queue")
-    public void handleUserEvent(UserEvent userEvent) {
+    @RabbitListener(queues = "user.event.create")
+    public void handleCreateUserEvent(UserEvent userEvent) {
+        userService.handleUserEvent(userEvent);
+    }
+    @RabbitListener(queues = "user.event.update")
+    public void handleUpdateUserEvent(UserEvent userEvent) {
         userService.handleUserEvent(userEvent);
     }
 }

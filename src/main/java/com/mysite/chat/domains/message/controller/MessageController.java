@@ -4,11 +4,7 @@ import com.mysite.chat.domains.message.domain.Message;
 import com.mysite.chat.domains.message.dto.request.CreateMessageRequest;
 import com.mysite.chat.domains.message.dto.request.GetAllMessageRequest;
 import com.mysite.chat.domains.message.service.MessageService;
-import com.mysite.chat.global.error.errorCode.ResponseCode;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,7 +33,7 @@ public class MessageController {
     }
     // 조회
     @GetMapping("/{id}")
-    public Message getMessageById(@PathVariable ObjectId id) {
+    public Message getMessageById(@PathVariable String id) {
         return messageService.findMessageById(id);
     }
     // 특정 채팅방 메세지 리스트 조회
@@ -47,12 +43,12 @@ public class MessageController {
     }
     // 삭제 (optional0)
     @DeleteMapping("/{id}")
-    public void deleteMessageById(@PathVariable ObjectId id) {
+    public void deleteMessageById(@PathVariable String id) {
         messageService.deleteMessageById(id);
     }
     // 메세지 수신 처리
     @PutMapping("/read/{id}")
-    public Message updateReadCountById(@PathVariable ObjectId id) {
+    public Message updateReadCountById(@PathVariable String id) {
         return messageService.updateReadCountById(id);
     }
 

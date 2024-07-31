@@ -32,14 +32,14 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
  * 2024-07-24        Yeong-Huns       최초 생성
  */
 @Repository
-public interface ChatRoomRepository extends MongoRepository <ChatRoom, ObjectId>{
+public interface ChatRoomRepository extends MongoRepository <ChatRoom, String>{
     // 동적 쿼리 생성
     List<ChatRoom> findAllByCreatedBy(long userId);
     // user 가 생성한 채팅방을 최신순(업데이트 순)으로 보여줌
     List<ChatRoom> findAllByCreatedByOrderByUpdatedAtDesc(long createdBy);
 
     //Mongo Aggregate -> 자바 stream 과 유사
-    default GetParticipantsInfoResponse findParticipantJoinedAt(MongoTemplate mongoTemplate, ObjectId chatRoomId, long userId) {
+    default GetParticipantsInfoResponse findParticipantJoinedAt(MongoTemplate mongoTemplate, String chatRoomId, long userId) {
         Aggregation aggregation = newAggregation( // Mongo DB aggregation 사용
                 match(where("_id").is(chatRoomId)), // 스트림의 .filter(chatRoom -> chatRoom._id == chatRoomId)
                 unwind("participants"), // 내부의 배열을 펼쳐서 flat 으로 바꿔줌 .flatMap()

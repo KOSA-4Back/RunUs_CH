@@ -37,7 +37,7 @@ public class NotificationController {
 
     // 알람 조회
     @GetMapping("/{id}")
-    public ResponseEntity<Notification> getNotification(@PathVariable("id") ObjectId notificationId) {
+    public ResponseEntity<Notification> getNotification(@PathVariable("id") String notificationId) {
         Notification notification = notificationService.getNotification(notificationId);
         return ResponseEntity.ok(notification);
     }
@@ -52,7 +52,7 @@ public class NotificationController {
 
     // 알람 읽음 (업데이트) 처리
     @PutMapping("/read/{id}")
-    public ResponseEntity<Notification> updateNotification(@PathVariable("id") ObjectId notificationId) {
+    public ResponseEntity<Notification> updateNotification(@PathVariable("id") String notificationId) {
         Notification notification = notificationService.updateNotification(notificationId);
         return ResponseEntity.ok(notification);
     }

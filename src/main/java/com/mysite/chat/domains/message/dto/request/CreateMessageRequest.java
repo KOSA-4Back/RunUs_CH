@@ -15,7 +15,7 @@ import org.bson.types.ObjectId;
  * 2024-07-25        Yeong-Huns       최초 생성
  */
 public record CreateMessageRequest(
-        ObjectId chatRoomId,
+        String chatRoomId,
         long senderId,
         String senderNickName,
         String senderProfileUrl,

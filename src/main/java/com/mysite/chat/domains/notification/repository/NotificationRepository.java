@@ -17,5 +17,5 @@ import org.springframework.stereotype.Repository;
  * 2024-07-24        Yeong-Huns       최초 생성
  */
 @Repository
-public interface NotificationRepository extends MongoRepository<Notification, ObjectId> {
+public interface NotificationRepository extends MongoRepository<Notification, String> {
 }
