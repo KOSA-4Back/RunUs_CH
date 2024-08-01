@@ -1,6 +1,6 @@
 package com.mysite.chat.domains.user.Repository;
 
-import com.mysite.chat.domains.user.domain.MongoUser;
+import com.mysite.chat.domains.user.domain.UserAddress;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +16,5 @@ import org.springframework.stereotype.Repository;
  * 2024-07-31        Yeong-Huns       최초 생성
  */
 @Repository
-public interface UserRepository extends MongoRepository<MongoUser, Long> {
+public interface UserRepository extends MongoRepository<UserAddress, Long> {
 }

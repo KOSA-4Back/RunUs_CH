@@ -36,6 +36,10 @@ public class ChatRoomController {
     public ChatRoom getChatRoomById(@PathVariable String id) {
         return chatRoomService.findChatRoomById(id);
     }
+    @GetMapping("/all/chatRoom")
+    public List<ChatRoom> getAllChatRooms() {
+        return chatRoomService.findChatRoomAll();
+    }
 
     @GetMapping("/user/{userId}")
     public List<ChatRoom> getChatRoomsByUserId(@PathVariable long userId) {

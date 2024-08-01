@@ -13,15 +13,18 @@ spring:
       serialization:
         write-dates-as-timestamps: false
 
+  config:
+    import: application-redis.yml
 
   rabbitmq:
     host: localhost
-    port: 5672
     username: guest
     password: guest
+    port: 5672
 server:
   port: 8081
 
 logging:
   level:
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.springframework.messaging: DEBUG

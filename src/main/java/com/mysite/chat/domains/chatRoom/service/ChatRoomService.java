@@ -60,6 +60,10 @@ public class ChatRoomService {
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND_CHATROOM));
     }
 
+    public List<ChatRoom> findChatRoomAll(){
+        return chatRoomRepository.findAll();
+    }
+
     // userId 로 chatRoomList 조회
     public List<ChatRoom> findChatRoomListByUserId(long userId) {
         return chatRoomRepository.findAllByCreatedBy(userId);

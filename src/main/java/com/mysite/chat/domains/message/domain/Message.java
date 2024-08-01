@@ -31,7 +31,6 @@ import java.util.Objects;
 public class Message {
     @Id
     private String id;
-    private String type;
     private String chatRoomId;
     private long senderId;
     private String senderNickName;
@@ -43,7 +42,6 @@ public class Message {
     @Builder
     public Message(String chatRoomId, String type, long senderId, String senderNickName, String senderProfileUrl, String content, int unReadCount) {
         this.chatRoomId = chatRoomId;
-        this.type = type;
         this.senderId = senderId;
         this.senderNickName = senderNickName;
         this.senderProfileUrl = senderProfileUrl;
@@ -53,11 +51,6 @@ public class Message {
 
     public Message updateUnReadCount(){
         this.unReadCount--;
-        return this;
-    }
-
-    public Message changeType(){
-        this.type = Objects.equals(type, "message") ? "notification" : "message";
         return this;
     }
 }

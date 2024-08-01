@@ -25,9 +25,9 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD")
-                        .allowCredentials(false);
+                        .allowedOrigins("http://localhost:3000/", "http://localhost:8080", "http://192.168.0.22:3000", "http://192.168.230.30:3000/runus/", "http://localhost:3000")
+                        .allowedMethods("*")
+                        .allowCredentials(true);
             }
         };
     }

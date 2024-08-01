@@ -27,33 +27,24 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Document(collection = "users")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MongoUser {
+public class UserAddress {
     @Id
     private long id;
-    private String name;
-    private String profileUrl;
-    private List<String> chatRooms;
+    private List<String> chatRoomAddress;
 
     @Builder
-    public MongoUser(long id, String name, String profileUrl) {
+    public UserAddress(long id) {
         this.id = id;
-        this.name = name;
-        this.profileUrl = profileUrl;
-        this.chatRooms = new ArrayList<>();
+        this.chatRoomAddress = new ArrayList<>();
     }
 
-    public MongoUser addChatRoom(String chatRoom) {
-        this.chatRooms.add(chatRoom);
+    public UserAddress addChatRoom(String chatRoomAddress) {
+        this.chatRoomAddress.add(chatRoomAddress);
         return this;
     }
 
-    public MongoUser removeChatRoom(String chatRoom) {
-        this.chatRooms.remove(chatRoom);
-        return this;
-    }
-
-    public MongoUser updateProfileUrl(String profileUrl) {
-        this.profileUrl = profileUrl;
+    public UserAddress removeChatRoom(String chatRoomAddress) {
+        this.chatRoomAddress.remove(chatRoomAddress);
         return this;
     }
 }
