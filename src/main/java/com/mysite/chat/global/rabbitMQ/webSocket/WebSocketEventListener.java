@@ -1,5 +1,6 @@
 package com.mysite.chat.global.rabbitMQ.webSocket;
 
+import com.mysite.chat.domains.user.dto.HelloMessage;
 import com.mysite.chat.global.redis.service.RedisUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -7,10 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * packageName    : com.mysite.chat.global.rabbitMQ.webSocket
@@ -31,15 +38,33 @@ public class WebSocketEventListener {
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
+
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
         String userId = headerAccessor.getFirstNativeHeader("userId");
+        String session = headerAccessor.getFirstNativeHeader("session");
+
+        // 모든 헤더 로그 출력
+        Map<String, List<String>> nativeHeaders = headerAccessor.toNativeHeaderMap();
+        log.info("event : {}" , headerAccessor.getSessionId());
+        log.info("모든 헤더: {}", nativeHeaders);
+
         if(userId != null && sessionId != null) {
             redisUserService.updateUserConnectionStatus(userId, true);
             redisUserService.saveSessionKey(sessionId, userId);
             log.info("웹 소켓 연결 감지 : {}", userId);
         }
+        log.info("seesionId: {}", sessionId);
+        log.info("userId: {}", userId);
+        log.info("session: {}", session);
     }
+    @MessageMapping("/hello")
+    @SendTo("/topic/greetings")
+    public void greeting(HelloMessage message) throws Exception {
+        // 처리 로직 (예: 메시지 가공)
+        log.info(message);
+    }
+
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());

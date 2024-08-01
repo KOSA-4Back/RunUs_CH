@@ -1,10 +1,5 @@
 package com.mysite.chat.global.rabbitMQ.config;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.mysite.chat.domains.user.controller.UserEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
@@ -16,7 +11,6 @@ import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -51,21 +45,8 @@ public class RabbitConfig {
         return template;
     }
 
-    @Bean
-    public SimpleMessageListenerContainer messageListenerContainer(CachingConnectionFactory connectionFactory,
-                                                                   MessageListenerAdapter listenerAdapter) {
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.setMessageListener(listenerAdapter);
-        return container;
-    }
     // 메시지 리스너 어댑터를 설정합니다. 이 어댑터는 수신된 메시지를 특정 메소드(handleUserEvent)로 라우팅합니다.
-    @Bean
-    public MessageListenerAdapter listenerAdapter(UserEventListener receiver) {
-        MessageListenerAdapter adapter = new MessageListenerAdapter(receiver, "handleUserEvent");
-        adapter.setMessageConverter(jsonMessageConverter());
-        return adapter;
-    }
+
 
 
     // RabbitMQ 관리를 위한 RabbitAdmin 빈을 설정합니다.
@@ -84,6 +65,22 @@ public class RabbitConfig {
     @Bean
     public TopicExchange messageExchange() {
         return new TopicExchange(MESSAGE_EXCHANGE_NAME, true, false);
+    }
+
+    @Bean
+    public DirectExchange msgExchange(){
+        return new DirectExchange("topic.message", true, false);
+    }
+
+    @Bean DirectExchange alarmExchange(){
+        return  new DirectExchange("topic.alarm", true, false);
+    }
+
+    @Bean Queue msgExchangeQueue(){
+        return new Queue("topic.message", true );
+    }
+    @Bean Queue alarmExchangeQueue(){
+        return new Queue("topic.alarm", true );
     }
 
     // 유저 이벤트를 위한 큐를 정의합니다.

@@ -74,27 +74,28 @@ POST http://localhost:8081/api/message
 Content-Type: application/json
 
 {
-  "chatRoomId": "66aaaa560ce61f457a425630",
-  "senderId": 49,
+  "chatRoomId": "66aaaa510ce61f457a42562e",
+  "senderId": 68,
   "senderNickName": "JohnDoe",
-  "senderProfileUrl": "http://example.com/profile.jpg",
-  "content": "Hello, this is a test message!!!!!",
+  "senderProfileUrl": "data:image/jpeg;base64,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",
+  "content": "가나다라마",
   "unReadCount": 0
 }
 
 ### 특정 메시지 조회
-@MessageID = 66a9e426b0cdc97af551ca91
+@MessageID = 66ab1d00e4b7860265c70796
 GET http://localhost:8081/api/message/{{MessageID}}
 
 ### 특정 채팅방의 메시지 리스트 조회
-@ChatRoomId = 66a9c29fe5d4af5d2a724efd
-GET http://localhost:8081/api/message/chatRoom
-Content-Type: application/json
+@ChatRoomId = 66aaaa750ce61f457a42563d
+GET http://localhost:8081/api/message/chatRoom?chatRoomId=66aaaa750ce61f457a42563d&userId=49
 
-{
-  "chatRoomId": "{{ChatRoomId}}",
-  "userId": 62
-}
+
+
+###
+GET http://localhost:8081/api/message/chat/test/dtd?chatRoomId=66aaaa560ce61f457a425630&userId=49
+
+
 
 ### 메시지 삭제
 DELETE http://localhost:8081/api/message/60c72b2f4f1a256b9b5d8e2e

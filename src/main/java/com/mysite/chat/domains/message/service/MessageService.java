@@ -3,6 +3,7 @@ package com.mysite.chat.domains.message.service;
 import com.mysite.chat.domains.chatRoom.repository.ChatRoomRepository;
 import com.mysite.chat.domains.message.domain.Message;
 import com.mysite.chat.domains.message.dto.request.CreateMessageRequest;
+import com.mysite.chat.domains.message.dto.response.MessageFormat;
 import com.mysite.chat.domains.message.repository.MessageRepository;
 import com.mysite.chat.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,10 @@ public class MessageService {
         rabbitTemplate.convertAndSend("msg.ex", routingKey, message);
     }
 
+    public void handleReceivedMessage(MessageFormat message){
+
+    }
+
     // 생성
     public Message CreateMessage(CreateMessageRequest request){
 
@@ -57,7 +62,7 @@ public class MessageService {
     }
    // chatRoomId 로 메세지 목록 조회 (참여 시점보다 이후 메세지만 조회)
     public List<Message> findAllMessageByChatRoomId(String chatRoomId, long userId){
-        LocalDateTime joinDate = chatRoomRepository.findById(chatRoomId).orElseThrow(NotFoundException::new).getParticipantJoinedAt(userId).orElseThrow(NotFoundException::new);
+        LocalDateTime joinDate = chatRoomRepository.findById(chatRoomId).orElseThrow(NotFoundException::new).getParticipantJoinedAt(userId).orElseThrow(()-> new NotFoundException("시간을 구하는데 실패"));
         return findMessagesAfterJoinDate(chatRoomId, joinDate);
     }
     // chatRoomId 와 userId 로 해당 채팅방의
@@ -65,11 +70,15 @@ public class MessageService {
     public List<Message> findMessagesAfterJoinDate(String chatRoomId, LocalDateTime joinDate) {
         // 참여 시점 이후의 메시지 조회
         Query query = new Query(
-                Criteria.where("chatRoomId").is(chatRoomId)
-                        .and("createdAt").gte(joinDate)
-        ).with(Sort.by(Sort.Direction.ASC, "createdAt")); // 생성 시간 순으로 정렬
+                Criteria.where("chat_room_id").is(chatRoomId)
+                        .and("created_at").gte(joinDate)
+        ).with(Sort.by(Sort.Direction.ASC, "created_at")); // 생성 시간 순으로 정렬
 
         return mongoTemplate.find(query, Message.class);
+    }
+
+    public LocalDateTime getParticipantJoinedAt(String chatRoomId, long userId){
+        return chatRoomRepository.findById(chatRoomId).orElseThrow(()->new NotFoundException("채팅방 검색 실패")).getParticipantJoinedAt(userId).orElseThrow(()-> new NotFoundException("시간을 구하는데 실패"));
     }
 
    // 메세지 삭제? optional
